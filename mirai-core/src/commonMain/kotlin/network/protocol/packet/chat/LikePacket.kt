@@ -16,24 +16,16 @@ import net.mamoe.mirai.internal.network.QQAndroidClient
 import net.mamoe.mirai.internal.network.protocol.data.jce.*
 import net.mamoe.mirai.internal.network.protocol.data.jce.FriendLike
 import net.mamoe.mirai.internal.network.protocol.data.jce.FriendLikeResp
-import net.mamoe.mirai.internal.network.protocol.data.jce.OnlinePushPack
 import net.mamoe.mirai.internal.network.protocol.data.jce.RequestPacket
 import net.mamoe.mirai.internal.network.protocol.packet.OutgoingPacketFactory
 import net.mamoe.mirai.internal.network.protocol.packet.buildOutgoingUniPacket
 import net.mamoe.mirai.internal.utils.io.serialization.*
 import net.mamoe.mirai.internal.utils.io.serialization.jceRequestSBuffer
-import net.mamoe.mirai.internal.utils.io.serialization.toByteArray
 import net.mamoe.mirai.internal.utils.io.serialization.writeJceStruct
 import net.mamoe.mirai.utils.hexToBytes
-import net.mamoe.mirai.utils.hexToUBytes
 
 internal object LikePacket : OutgoingPacketFactory<LikePacket.Response>("VisitorSvc.ReqFavorite") {
     override suspend fun ByteReadPacket.decode(bot: QQAndroidBot): Response {
-        if (this.endOfInput)
-        {
-//            空了
-            return Response(false, -1)
-        }
         val res = this.readUniPacket(FriendLikeResp.serializer())
         // https://github.com/tsuzcx/qq_apk/blob/dfa4bbb676ea1d1dc583317281980df86420ecb4/com.tencent.mobileqq/classes.jar/com/tencent/mobileqq/app/NearbyCmdHelper.java#L608
         return Response(res.stHead.replyCode != 0, res.stHead.replyCode)
