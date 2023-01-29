@@ -9,12 +9,45 @@
 
 package net.mamoe.mirai.internal.network.protocol.data.jce
 
+import io.ktor.utils.io.core.*
 import kotlinx.serialization.Serializable
 import net.mamoe.mirai.internal.utils.io.JceStruct
 import net.mamoe.mirai.internal.utils.io.serialization.tars.TarsId
 import kotlin.jvm.JvmField
 
+@Serializable
+internal class FriendLikeHead(
+    @JvmField @TarsId(0) val fromId: Long,
+    @JvmField @TarsId(1) val ver: Int = 1,
+    @JvmField @TarsId(2) val seq: Int = 0,
+    @JvmField @TarsId(3) val reqType: Byte,
+    @JvmField @TarsId(4) val trigger: Byte,
+    @JvmField @TarsId(5) val vCookies: ByteArray,
+) : JceStruct
+@Serializable
+internal class FriendLike(
+    @JvmField @TarsId(0) val head: FriendLikeHead,
+    @JvmField @TarsId(1) val targetId: Long,
+    @JvmField @TarsId(2) val opType: Int = 0,
+    @JvmField @TarsId(3) val emSource: Int = 1,
+    @JvmField @TarsId(4) val iCount: Int = 1,
+) : JceStruct
 
+@Serializable
+internal class FriendLikeRespHead(
+    @JvmField @TarsId(0) val version: Short,
+    @JvmField @TarsId(1) val seq: Int,
+    @JvmField @TarsId(2) val uin: Long,
+    @JvmField @TarsId(3) val replyCode: Int,
+    @JvmField @TarsId(4) val strResult: String,
+) : JceStruct
+@Serializable
+internal class FriendLikeResp(
+    @JvmField @TarsId(0) val stHead: FriendLikeRespHead,
+    @JvmField @TarsId(1) val lMID: Long,
+    @JvmField @TarsId(2) val opType: Byte,
+    @JvmField @TarsId(3) val vNotice: ByteArray,
+) : JceStruct
 @Serializable
 internal class DelFriendReq(
     @JvmField @TarsId(0) val uin: Long,
