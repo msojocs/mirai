@@ -87,6 +87,13 @@ public interface User : Contact, UserOrBot, CoroutineScope {
     public override fun nudge(): UserNudge
 
     /**
+     * 对用户进行点赞
+     *
+     * @since 2.14.0
+     */
+    public suspend fun sendLike(count: Int): Boolean = Mirai.sendLike(bot, this.id, count)
+
+    /**
      * 查询用户信息
      *
      * @since 2.1

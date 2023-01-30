@@ -171,6 +171,11 @@ internal class MockNormalMemberImpl(
         return super<AbstractMockContact>.sendMessage(message).cast()
     }
 
+    override suspend fun sendLike(count: Int): Boolean {
+
+        return true
+    }
+
     override suspend fun mute(durationSeconds: Int) {
         requireBotPermissionHigherThanThis("mute")
         require(durationSeconds > 0) {

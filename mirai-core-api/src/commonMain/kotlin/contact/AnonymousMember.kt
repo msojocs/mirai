@@ -40,6 +40,7 @@ public interface AnonymousMember : Member {
         throw UnsupportedOperationException("Cannot send message to AnonymousMember")
 
     override fun nudge(): MemberNudge = throw UnsupportedOperationException("Cannot nudge AnonymousMember")
+    override suspend fun sendLike(count: Int): Boolean = throw UnsupportedOperationException("Cannot like AnonymousMember")
     override suspend fun uploadImage(resource: ExternalResource): Image =
         throw UnsupportedOperationException("Cannot upload image to AnonymousMember")
 }

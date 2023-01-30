@@ -33,3 +33,4 @@ compilerOpts =               -I/opt/openssl/include \
                              -I/usr/local/include/ \
                              -IC:/openssl/include/ \
                              -IC:/vcpkg/installed/x64-windows/include \
+                             -ID:/cygwin64/usr/x86_64-w64-mingw32/sys-root/mingw/include \
