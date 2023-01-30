@@ -107,8 +107,9 @@ private fun Project.configureMultiplatformPublication(
             publication.artifactId = "${project.name}-metadata"
         }
         else -> {
+            // lowercase for github
             // "jvm", "native", "js", "common"
-            publication.artifactId = "${project.name}-$moduleName"
+            publication.artifactId = "${project.name}-$moduleName".toLowerCase()
         }
     }
 }

@@ -122,6 +122,8 @@ public abstract interface class net/mamoe/mirai/IMirai : net/mamoe/mirai/LowLeve
 	public abstract fun rejectNewFriendRequest (Lnet/mamoe/mirai/event/events/NewFriendRequestEvent;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun rejectNewFriendRequest$default (Lnet/mamoe/mirai/IMirai;Lnet/mamoe/mirai/event/events/NewFriendRequestEvent;ZILjava/lang/Object;)V
 	public static synthetic fun rejectNewFriendRequest$default (Lnet/mamoe/mirai/IMirai;Lnet/mamoe/mirai/event/events/NewFriendRequestEvent;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun sendLike (Lnet/mamoe/mirai/Bot;JI)Z
+	public abstract fun sendLike (Lnet/mamoe/mirai/Bot;JILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun sendNudge (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/message/action/Nudge;Lnet/mamoe/mirai/contact/Contact;)Z
 	public abstract fun sendNudge (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/message/action/Nudge;Lnet/mamoe/mirai/contact/Contact;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun setFileCacheStrategy (Lnet/mamoe/mirai/utils/FileCacheStrategy;)V
@@ -170,6 +172,8 @@ public abstract interface class net/mamoe/mirai/contact/AnonymousMember : net/ma
 	public fun nudge ()Lnet/mamoe/mirai/message/action/MemberNudge;
 	public synthetic fun nudge ()Lnet/mamoe/mirai/message/action/Nudge;
 	public synthetic fun nudge ()Lnet/mamoe/mirai/message/action/UserNudge;
+	public fun sendLike (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun sendLike$suspendImpl (Lnet/mamoe/mirai/contact/AnonymousMember;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun sendMessage (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun sendMessage (Lnet/mamoe/mirai/message/data/Message;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun sendMessage$suspendImpl (Lnet/mamoe/mirai/contact/AnonymousMember;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -604,6 +608,9 @@ public abstract interface class net/mamoe/mirai/contact/User : kotlinx/coroutine
 	public fun queryProfile ()Lnet/mamoe/mirai/data/UserProfile;
 	public fun queryProfile (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun queryProfile$suspendImpl (Lnet/mamoe/mirai/contact/User;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun sendLike (I)Z
+	public fun sendLike (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun sendLike$suspendImpl (Lnet/mamoe/mirai/contact/User;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun sendMessage (Ljava/lang/String;)Lnet/mamoe/mirai/message/MessageReceipt;
 	public fun sendMessage (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun sendMessage (Lnet/mamoe/mirai/message/data/Message;)Lnet/mamoe/mirai/message/MessageReceipt;
