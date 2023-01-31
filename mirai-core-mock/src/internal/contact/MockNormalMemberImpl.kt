@@ -14,6 +14,7 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.broadcast
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.MessageReceipt
+import net.mamoe.mirai.message.data.LikeResult
 import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.OnlineMessageSource
@@ -171,9 +172,9 @@ internal class MockNormalMemberImpl(
         return super<AbstractMockContact>.sendMessage(message).cast()
     }
 
-    override suspend fun sendLike(count: Int): Boolean {
+    override suspend fun sendLike(count: Int): LikeResult {
 
-        return true
+        return LikeResult(true, 0, "")
     }
 
     override suspend fun mute(durationSeconds: Int) {

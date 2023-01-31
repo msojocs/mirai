@@ -643,14 +643,14 @@ internal open class MiraiImpl : IMirai, LowLevelApiAccessor {
         )
     }
 
-    override suspend fun sendLike(bot: Bot, targetId: Long, count: Int): Boolean {
+    override suspend fun sendLike(bot: Bot, targetId: Long, count: Int): LikeResult {
         var c: Int = count
         if(count > 20) c = 20
         val res = bot.asQQAndroidBot().network.sendAndExpect(
             LikePacket.invoke(bot.client, targetId, c),
             5000, 2
         )
-        return res.success
+        return LikeResult(res.success, res.code, res.msg)
     }
 
     override suspend fun sendNudge(bot: Bot, nudge: Nudge, receiver: Contact): Boolean {

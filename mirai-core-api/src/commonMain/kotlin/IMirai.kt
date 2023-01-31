@@ -207,7 +207,7 @@ public interface IMirai : LowLevelApiAccessor {
      *
      * @since 2.14.0
      */
-    public suspend fun sendLike(bot: Bot, targetId: Long, count: Int): Boolean
+    public suspend fun sendLike(bot: Bot, targetId: Long, count: Int): LikeResult
 
     /**
      * 构造一个 [OfflineMessageSource].

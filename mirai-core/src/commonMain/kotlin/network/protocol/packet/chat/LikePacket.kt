@@ -28,19 +28,19 @@ internal object LikePacket : OutgoingPacketFactory<LikePacket.Response>("Visitor
     override suspend fun ByteReadPacket.decode(bot: QQAndroidBot): Response {
         val res = this.readUniPacket(FriendLikeResp.serializer())
         // https://github.com/tsuzcx/qq_apk/blob/dfa4bbb676ea1d1dc583317281980df86420ecb4/com.tencent.mobileqq/classes.jar/com/tencent/mobileqq/app/NearbyCmdHelper.java#L608
-        return Response(res.stHead.replyCode == 0, res.stHead.replyCode)
+        return Response(res.stHead.replyCode == 0, res.stHead.replyCode, res.stHead.strResult)
 
     }
 
-    class Response(val success: Boolean, val code: Int) : Packet {
-        override fun toString(): String = "LikeResponse(success=$success,code=$code)"
+    class Response(val success: Boolean, val code: Int, val msg: String) : Packet {
+        override fun toString(): String = "LikeResponse(success=$success,code=$code,msg=$msg)"
     }
 
     fun invoke(
         client: QQAndroidClient,
         targetId: Long,
         count: Int = 1
-    ) = buildOutgoingUniPacket(client, bodyType = 1, key = client.wLoginSigInfo.d2Key) {
+    ) = buildOutgoingUniPacket(client) {
 
         val requestId = client.nextRequestPacketRequestId()
         writeJceStruct(

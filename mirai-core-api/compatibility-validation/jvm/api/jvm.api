@@ -122,7 +122,7 @@ public abstract interface class net/mamoe/mirai/IMirai : net/mamoe/mirai/LowLeve
 	public abstract fun rejectNewFriendRequest (Lnet/mamoe/mirai/event/events/NewFriendRequestEvent;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun rejectNewFriendRequest$default (Lnet/mamoe/mirai/IMirai;Lnet/mamoe/mirai/event/events/NewFriendRequestEvent;ZILjava/lang/Object;)V
 	public static synthetic fun rejectNewFriendRequest$default (Lnet/mamoe/mirai/IMirai;Lnet/mamoe/mirai/event/events/NewFriendRequestEvent;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public fun sendLike (Lnet/mamoe/mirai/Bot;JI)Z
+	public fun sendLike (Lnet/mamoe/mirai/Bot;JI)Lnet/mamoe/mirai/message/data/LikeResult;
 	public abstract fun sendLike (Lnet/mamoe/mirai/Bot;JILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun sendNudge (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/message/action/Nudge;Lnet/mamoe/mirai/contact/Contact;)Z
 	public abstract fun sendNudge (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/message/action/Nudge;Lnet/mamoe/mirai/contact/Contact;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -608,7 +608,7 @@ public abstract interface class net/mamoe/mirai/contact/User : kotlinx/coroutine
 	public fun queryProfile ()Lnet/mamoe/mirai/data/UserProfile;
 	public fun queryProfile (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun queryProfile$suspendImpl (Lnet/mamoe/mirai/contact/User;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun sendLike (I)Z
+	public fun sendLike (I)Lnet/mamoe/mirai/message/data/LikeResult;
 	public fun sendLike (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun sendLike$suspendImpl (Lnet/mamoe/mirai/contact/User;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun sendMessage (Ljava/lang/String;)Lnet/mamoe/mirai/message/MessageReceipt;
@@ -4291,6 +4291,21 @@ public final class net/mamoe/mirai/message/data/LightApp$$serializer : kotlinx/s
 
 public final class net/mamoe/mirai/message/data/LightApp$Key : net/mamoe/mirai/message/data/AbstractMessageKey {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class net/mamoe/mirai/message/data/LikeResult {
+	public fun <init> (ZILjava/lang/String;)V
+	public final fun component1 ()Z
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (ZILjava/lang/String;)Lnet/mamoe/mirai/message/data/LikeResult;
+	public static synthetic fun copy$default (Lnet/mamoe/mirai/message/data/LikeResult;ZILjava/lang/String;ILjava/lang/Object;)Lnet/mamoe/mirai/message/data/LikeResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCode ()I
+	public final fun getMsg ()Ljava/lang/String;
+	public final fun getSuccess ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class net/mamoe/mirai/message/data/MarketFace : net/mamoe/mirai/message/data/HummerMessage {
