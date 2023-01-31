@@ -63,7 +63,7 @@ internal object LikePacket : OutgoingPacketFactory<LikePacket.Response>("Visitor
                         ),
                         targetId = targetId,
                         opType = 0,
-                        emSource = 1,
+                        emSource = 65535,
                         iCount = count
                     )
                 )
