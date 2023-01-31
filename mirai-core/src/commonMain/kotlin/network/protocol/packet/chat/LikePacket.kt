@@ -28,7 +28,7 @@ internal object LikePacket : OutgoingPacketFactory<LikePacket.Response>("Visitor
     override suspend fun ByteReadPacket.decode(bot: QQAndroidBot): Response {
         val res = this.readUniPacket(FriendLikeResp.serializer())
         // https://github.com/tsuzcx/qq_apk/blob/dfa4bbb676ea1d1dc583317281980df86420ecb4/com.tencent.mobileqq/classes.jar/com/tencent/mobileqq/app/NearbyCmdHelper.java#L608
-        return Response(res.stHead.replyCode != 0, res.stHead.replyCode)
+        return Response(res.stHead.replyCode == 0, res.stHead.replyCode)
 
     }
 
