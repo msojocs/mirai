@@ -16,6 +16,7 @@ net.mamoe.mirai.internal.message.protocol.impl.IgnoredMessagesProtocol
 net.mamoe.mirai.internal.message.protocol.impl.ImageProtocol
 net.mamoe.mirai.internal.message.protocol.impl.MarketFaceProtocol
 net.mamoe.mirai.internal.message.protocol.impl.MusicShareProtocol
+net.mamoe.mirai.internal.message.protocol.impl.ArkMessageProtocol
 net.mamoe.mirai.internal.message.protocol.impl.PokeMessageProtocol
 net.mamoe.mirai.internal.message.protocol.impl.PttMessageProtocol
 net.mamoe.mirai.internal.message.protocol.impl.QuoteReplyProtocol
