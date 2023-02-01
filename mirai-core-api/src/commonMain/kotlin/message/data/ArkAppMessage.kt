@@ -13,6 +13,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNames
 import net.mamoe.mirai.message.code.CodableMessage
 import net.mamoe.mirai.utils.MiraiExperimentalApi
 import net.mamoe.mirai.utils.currentTimeSeconds
@@ -28,7 +29,8 @@ public data class ArkAppMessage(
     public val prompt: String = "",
     public val meta: ArkAppMeta = ArkAppMeta(),
     public val config: ArkAppConfig = ArkAppConfig(),
-    public val appid: String = "",
+    @JsonNames("appID")
+    public val appId: String = "",
     public val sourceAd: String = "",
     public val sourceName: String = "",
     public val actionData: String = "",
