@@ -21,24 +21,24 @@ import net.mamoe.mirai.utils.safeCast
 
 @Serializable
 @SerialName(ArkAppMessage.SERIAL_NAME)
-public data class ArkAppMessage(
-    public val app: String = "",
-    public val desc: String = "",
-    public val view: String = "",
-    public val ver: String = "",
-    public val prompt: String = "",
-    public val meta: ArkAppMeta = ArkAppMeta(),
-    public val config: ArkAppConfig = ArkAppConfig(),
+public open class ArkAppMessage(
+    public open var app: String = "",
+    public open var desc: String = "",
+    public open var view: String = "",
+    public open var ver: String = "",
+    public open var prompt: String = "",
+    public open var meta: ArkAppMeta = ArkAppMeta(),
+    public open var config: ArkAppConfig = ArkAppConfig(),
     @JsonNames("appID")
-    public val appId: String = "",
-    public val sourceAd: String = "",
-    public val sourceName: String = "",
-    public val actionData: String = "",
-    public val actionData_A: String = "",
-    public val sourceUrl: String = "",
-    public val extraApps: ArrayList<ArkAppMessage>? = ArrayList(),
-    public val text: String = "",
-    public val extra: String = ""
+    public open var appId: String = "",
+    public open var sourceAd: String = "",
+    public open var sourceName: String = "",
+    public open var actionData: String = "",
+    public open var actionData_A: String = "",
+    public open var sourceUrl: String = "",
+    public open var extraApps: ArrayList<ArkAppMessage>? = ArrayList(),
+    public open var text: String = "",
+    public open var extra: String = ""
 ) : MessageContent, ConstrainSingle, CodableMessage {
 
     override val key: MessageKey<*> get() = MusicShare
@@ -48,6 +48,11 @@ public data class ArkAppMessage(
         builder.append("[mirai:arkappmessage:")
             .append(Json.encodeToString(this))
             .append(']')
+    }
+
+    override fun toString(): String {
+//        TODO("Not yet implemented")
+        return "ArkAppMessage";
     }
 
     override fun contentToString(): String {
@@ -79,10 +84,10 @@ public data class ArkAppConfig(
     }
 }
 @Serializable
-public data class ArkAppMeta(
-    public val singleImg: ArkAppSingleImg? = null,
-    public val groupPushData: ArkAppGroupPushData? = null,
-    public val notification: ArkAppNotification? = null,
+public open class ArkAppMeta(
+    public open var singleImg: ArkAppSingleImg? = null,
+    public open var groupPushData: ArkAppGroupPushData? = null,
+    public open var notification: ArkAppNotification? = null,
 ) {
 
     override fun toString(): String {
@@ -105,6 +110,7 @@ public data class ArkAppMeta(
       "source_icon" : "",
       "android_pkg_name" : ""
  */
+@Serializable
 public data class ArkAppMusic(
     public val sourceMsgId: String = "",
     public val title: String = "",
@@ -204,15 +210,15 @@ public data class ArkAppGiftData(
         "appName" : "清墨的橘",
         "appType" : 4,
         "appid" : 1109659848,
-        "iconUrl" : "https://yun.abcio.cn/tx.png"
+        "iconUrl" : "https://yun..cn/tx.png"
       },
       "button" : [
         {
-          "action" : "https://abcio.cn",
+          "action" : "https://.cn",
           "name" : "清墨的橘官方博客"
         },
         {
-          "action" : "https://abcio.cn",
+          "action" : "https://.cn",
           "name" : "进入小程序查看详情"
         }
       ],
@@ -235,19 +241,19 @@ public data class ArkAppGiftData(
     }
  */
 @Serializable
-public data class ArkAppNotification(
-    public val appInfo: AppInfo,
-    public val button: List<Button> = ArrayList(),
-    public val data: List<Data> = ArrayList(),
-    public val emphasis_keyword: String = "",
-    public val title: String = "",
+public open class ArkAppNotification(
+    public open var appInfo: AppInfo? = AppInfo(),
+    public open var button: List<Button>? = ArrayList(),
+    public open var data: List<Data>? = ArrayList(),
+    public open var emphasis_keyword: String? = "",
+    public open var title: String? = "",
 ) {
     @Serializable
-    public class AppInfo(
-        public val appName: String,
-        public val appType: Int = 4,
-        public val appid: Long,
-        public val iconUrl: String = ""
+    public open class AppInfo(
+        public open var appName: String = "",
+        public open var appType: Int = 4,
+        public open var appid: Long = 0,
+        public open var iconUrl: String = ""
     ){}
     @Serializable
     public class Button (
