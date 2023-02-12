@@ -72,12 +72,21 @@ public open class ArkAppMessage(
     }
 }
 
+/**
+ * Ark消息配置
+ */
 @Serializable
-public data class ArkAppConfig(
-    public val ctime: Long = currentTimeSeconds(),
-    public val forward: Int = 0,
-    public val showSender: Int = 0,
-    public val token: String? = ""
+public open class ArkAppConfig(
+    public open var ctime: Long? = currentTimeSeconds(),
+    /**
+     * 是否可以被别人转发
+     */
+    public open var forward: Int? = 0,
+    /**
+     * 是否显示发送者
+     */
+    public open var showSender: Int? = 1,
+    public open var token: String? = ""
 ) {
     override fun toString(): String {
         return super.toString()
