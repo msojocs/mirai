@@ -88,6 +88,9 @@ public open class ArkAppMeta(
     public open var singleImg: ArkAppSingleImg? = null,
     public open var groupPushData: ArkAppGroupPushData? = null,
     public open var notification: ArkAppNotification? = null,
+    public open var robot: ArkAppRobot? = null,
+    public open var detail: ArkAppTask? = null,
+    public open var news: ArkAppNews? = null,
 ) {
 
     override fun toString(): String {
@@ -95,7 +98,6 @@ public open class ArkAppMeta(
     }
 }
 /*
-
       "sourceMsgId" : "0",
       "title" : "清墨的橘个人博客",
       "desc" : "为了纪念，为了祭奠",
@@ -111,20 +113,77 @@ public open class ArkAppMeta(
       "android_pkg_name" : ""
  */
 @Serializable
-public data class ArkAppMusic(
-    public val sourceMsgId: String = "",
-    public val title: String = "",
-    public val desc: String = "",
-    public val preview: String = "",
-    public val tag: String = "",
-    public val musicUrl: String = "",
-    public val jumpUrl: String = "",
-    public val appid: Long,
-    public val app_type: Int,
-    public val action: String = "",
-    public val source_url: String = "",
-    public val source_icon: String = "",
-    public val android_pkg_name: String = "",
+public open class ArkAppMusic(
+    public open var sourceMsgId: String = "",
+    public open var title: String = "",
+    public open var desc: String = "",
+    public open var preview: String = "",
+    public open var tag: String = "",
+    public open var musicUrl: String = "",
+    public open var jumpUrl: String = "",
+    public open var appid: Long = 0,
+    public open var app_type: Int = 0,
+    public open var action: String = "",
+    public open var source_url: String = "",
+    public open var source_icon: String = "",
+    public open var android_pkg_name: String = "",
+) {
+    override fun toString(): String {
+        return super.toString()
+    }
+}
+@Serializable
+public open class ArkAppNews(
+    public open var title: String? = "",
+    public open var desc: String? = "",
+    public open var preview: String? = "",
+    public open var tag: String? = "",
+    public open var jumpUrl: String? = "",
+    public open var appid: Long? = 0,
+    public open var app_type: Int? = 1,
+    public open var action: String? = "",
+    public open var source_url: String? = "",
+    public open var source_icon: String? = "",
+    public open var android_pkg_name: String? = "",
+) {}
+@Serializable
+public open class ArkAppTask(
+    public open var appID: String? = "",
+    public open var battleDesc: String? = "",
+    public open var botName: String? = "",
+    public open var cmdTitle: String? = "",
+    public open var content: String? = "",
+    public open var guildID: String? = "",
+    public open var receiverName: String? = "",
+    public open var subGuildID: String? = "",
+    public open var title: String? = "",
+    public open var titleColor: String? = "",
+    public open var cmdList: List<ArkAppTaskCmd>? = null,
+    public open var iconLeft: List<ArkAppTaskCmd>? = null,
+    public open var iconRight: List<ArkAppTaskCmd>? = null,
+) {
+    override fun toString(): String {
+        return super.toString()
+    }
+    @Serializable
+    public open class ArkAppTaskCmd (
+        public open var cmd: String? ="",
+        public open var cmdDesc: String? ="",
+        public open var cmdTitle: String? ="",
+    ){
+    }
+    @Serializable
+    public open class ArkAppTaskIcon (
+        public open var num: String? ="",
+    ){
+    }
+}
+@Serializable
+public open class ArkAppRobot(
+    public open var title: String? = "",
+    public open var subtitle: String? = "",
+    public open var cover: String? = "",
+    public open var jump_url: String? = "",
 ) {
     override fun toString(): String {
         return super.toString()
