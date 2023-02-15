@@ -5432,6 +5432,7 @@ public class net/mamoe/mirai/utils/BotConfiguration {
 	public final fun getContactListCache ()Lnet/mamoe/mirai/utils/BotConfiguration$ContactListCache;
 	public static final fun getDefault ()Lnet/mamoe/mirai/utils/BotConfiguration;
 	public final fun getDeviceInfo ()Lkotlin/jvm/functions/Function1;
+	public final fun getDoQRCodeLogin ()Z
 	public final synthetic fun getFirstReconnectDelayMillis ()J
 	public final fun getHeartbeatPeriodMillis ()J
 	public final fun getHeartbeatStrategy ()Lnet/mamoe/mirai/utils/BotConfiguration$HeartbeatStrategy;
@@ -5442,7 +5443,6 @@ public class net/mamoe/mirai/utils/BotConfiguration {
 	public final fun getNetworkLoggerSupplier ()Lkotlin/jvm/functions/Function1;
 	public final fun getParentCoroutineContext ()Lkotlin/coroutines/CoroutineContext;
 	public final fun getProtocol ()Lnet/mamoe/mirai/utils/BotConfiguration$MiraiProtocol;
-	public final fun getQrCodeLogin ()Z
 	public final synthetic fun getReconnectPeriodMillis ()J
 	public final fun getReconnectionRetryTimes ()I
 	public final fun getStatHeartbeatPeriodMillis ()J
@@ -5478,6 +5478,7 @@ public class net/mamoe/mirai/utils/BotConfiguration {
 	public final fun setContactListCache (Lnet/mamoe/mirai/utils/BotConfiguration$ContactListCache;)V
 	public final fun setConvertLineSeparator (Z)V
 	public final fun setDeviceInfo (Lkotlin/jvm/functions/Function1;)V
+	public final fun setDoQRCodeLogin (Z)V
 	public final synthetic fun setFirstReconnectDelayMillis (J)V
 	public final fun setHeartbeatPeriodMillis (J)V
 	public final fun setHeartbeatStrategy (Lnet/mamoe/mirai/utils/BotConfiguration$HeartbeatStrategy;)V
@@ -5488,7 +5489,6 @@ public class net/mamoe/mirai/utils/BotConfiguration {
 	public final fun setNetworkLoggerSupplier (Lkotlin/jvm/functions/Function1;)V
 	public final fun setParentCoroutineContext (Lkotlin/coroutines/CoroutineContext;)V
 	public final fun setProtocol (Lnet/mamoe/mirai/utils/BotConfiguration$MiraiProtocol;)V
-	public final fun setQrCodeLogin (Z)V
 	public final synthetic fun setReconnectPeriodMillis (J)V
 	public final fun setReconnectionRetryTimes (I)V
 	public final fun setShowingVerboseEventLog (Z)V
@@ -5833,7 +5833,7 @@ public abstract class net/mamoe/mirai/utils/LoginSolver {
 	public static final field Companion Lnet/mamoe/mirai/utils/LoginSolver$Companion;
 	public static final field Default Lnet/mamoe/mirai/utils/LoginSolver;
 	public fun <init> ()V
-	public fun getQrCodeLoginListener ()Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener;
+	public fun createQRCodeLoginListener (Lnet/mamoe/mirai/Bot;)Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener;
 	public fun isSliderCaptchaSupported ()Z
 	public fun onSolveDeviceVerification (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/utils/DeviceVerificationRequests;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun onSolvePicCaptcha (Lnet/mamoe/mirai/Bot;[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -6215,7 +6215,7 @@ public final class net/mamoe/mirai/utils/StandardCharImageLoginSolver : net/mamo
 	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lnet/mamoe/mirai/utils/MiraiLogger;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun createBlocking (Lkotlin/jvm/functions/Function0;)Lnet/mamoe/mirai/utils/StandardCharImageLoginSolver;
 	public static final fun createBlocking (Lkotlin/jvm/functions/Function0;Lnet/mamoe/mirai/utils/MiraiLogger;)Lnet/mamoe/mirai/utils/StandardCharImageLoginSolver;
-	public fun getQrCodeLoginListener ()Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener;
+	public fun createQRCodeLoginListener (Lnet/mamoe/mirai/Bot;)Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener;
 	public fun isSliderCaptchaSupported ()Z
 	public fun onSolveDeviceVerification (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/utils/DeviceVerificationRequests;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun onSolvePicCaptcha (Lnet/mamoe/mirai/Bot;[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
