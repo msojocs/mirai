@@ -5834,6 +5834,9 @@ public abstract class net/mamoe/mirai/utils/LoginSolver {
 	public static final field Default Lnet/mamoe/mirai/utils/LoginSolver;
 	public fun <init> ()V
 	public fun createQRCodeLoginListener (Lnet/mamoe/mirai/Bot;)Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener;
+	public fun getQrCodeEcLevel ()I
+	public fun getQrCodeMargin ()I
+	public fun getQrCodeSize ()I
 	public fun isSliderCaptchaSupported ()Z
 	public fun onSolveDeviceVerification (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/utils/DeviceVerificationRequests;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun onSolvePicCaptcha (Lnet/mamoe/mirai/Bot;[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
