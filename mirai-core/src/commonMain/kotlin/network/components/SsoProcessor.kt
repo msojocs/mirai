@@ -14,6 +14,7 @@ import kotlinx.atomicfu.atomic
 import net.mamoe.mirai.internal.QQAndroidBot
 import net.mamoe.mirai.internal.network.Packet
 import net.mamoe.mirai.internal.network.QQAndroidClient
+import net.mamoe.mirai.internal.network.QRCodeLoginData
 import net.mamoe.mirai.internal.network.WLoginSigInfo
 import net.mamoe.mirai.internal.network.component.ComponentKey
 import net.mamoe.mirai.internal.network.handler.NetworkHandler
@@ -156,12 +157,19 @@ internal class SsoProcessorImpl(
                     FastLoginImpl(handler).doLogin()
                 }.onFailure { e ->
                     collectException(e)
-                    SlowLoginImpl(handler).doLogin()
+                    SlowLoginImpl(handler, LoginType.Password).doLogin()
                 }
             } else {
                 client = createClient(ssoContext.bot)
                 ssoContext.bot.components[EcdhInitialPublicKeyUpdater].refreshInitialPublicKeyAndApplyEcdh()
-                SlowLoginImpl(handler).doLogin()
+
+                val qrCodeLoginProcessor = ssoContext.bot.components[QRCodeLoginProcessor]
+                if (qrCodeLoginProcessor !== QRCodeLoginProcessor.NOOP) {
+                    val qrcodeLoginData = qrCodeLoginProcessor.prepareProcess(handler, client).process(handler, client)
+                    SlowLoginImpl(handler, LoginType.QRCode(qrcodeLoginData)).doLogin()
+                } else {
+                    SlowLoginImpl(handler, LoginType.Password).doLogin()
+                }
             }
         } catch (e: Exception) {
             // Failed to log in, invalidate secrets.
@@ -219,7 +227,10 @@ internal class SsoProcessorImpl(
         abstract suspend fun doLogin()
     }
 
-    private inner class SlowLoginImpl(handler: NetworkHandler) : LoginStrategy(handler) {
+    private inner class SlowLoginImpl(
+        handler: NetworkHandler,
+        private val loginType: LoginType
+    ) : LoginStrategy(handler) {
 
         private fun loginSolverNotNull(): LoginSolver {
             fun LoginSolver?.notnull(): LoginSolver {
@@ -259,9 +270,15 @@ internal class SsoProcessorImpl(
 
         override suspend fun doLogin() = withExceptionCollector {
 
+            @Suppress("FunctionName")
+            fun SSOWtLogin9(allowSlider: Boolean) = when (loginType) {
+                is LoginType.Password -> WtLogin9.Password(client, allowSlider)
+                is LoginType.QRCode -> WtLogin9.QRCode(client, loginType.qrCodeLoginData)
+            }
+
             var allowSlider = sliderSupported || bot.configuration.protocol == MiraiProtocol.ANDROID_PHONE
 
-            var response: LoginPacketResponse = WtLogin9(client, allowSlider).sendAndExpect()
+            var response: LoginPacketResponse = SSOWtLogin9(allowSlider).sendAndExpect()
 
             mainloop@ while (true) {
                 when (response) {
@@ -281,7 +298,7 @@ internal class SsoProcessorImpl(
                         check(result is DeviceVerificationResultImpl)
                         response = when (result) {
                             is UrlDeviceVerificationResult -> {
-                                WtLogin9(client, allowSlider).sendAndExpect()
+                                SSOWtLogin9(allowSlider).sendAndExpect()
                             }
 
                             is SmsDeviceVerificationResult -> {
@@ -308,7 +325,7 @@ internal class SsoProcessorImpl(
                                 collectThrow(error)
                             }
                             response = if (ticket == null) {
-                                WtLogin9(client, allowSlider).sendAndExpect()
+                                SSOWtLogin9(allowSlider).sendAndExpect()
                             } else {
                                 WtLogin2.SubmitSliderCaptcha(client, ticket).sendAndExpect()
                             }
@@ -356,6 +373,11 @@ internal class SsoProcessorImpl(
             }
 
         }
+    }
+
+    private sealed class LoginType {
+        object Password : LoginType()
+        class QRCode(val qrCodeLoginData: QRCodeLoginData) : LoginType()
     }
 
     private inner class FastLoginImpl(handler: NetworkHandler) : LoginStrategy(handler) {

@@ -6026,6 +6026,12 @@ public final class net/mamoe/mirai/network/ForceOfflineException : java/util/con
 	public fun getMessage ()Ljava/lang/String;
 }
 
+public final class net/mamoe/mirai/network/InconsistentBotException : net/mamoe/mirai/network/LoginFailedException {
+	public synthetic fun <init> (JJLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getActual ()J
+	public final fun getExpected ()J
+}
+
 public abstract class net/mamoe/mirai/network/LoginFailedException : java/lang/RuntimeException {
 	public synthetic fun <init> (ZLjava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (ZLjava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -6097,6 +6103,7 @@ public class net/mamoe/mirai/utils/BotConfiguration {
 	public final fun getContactListCache ()Lnet/mamoe/mirai/utils/BotConfiguration$ContactListCache;
 	public static final fun getDefault ()Lnet/mamoe/mirai/utils/BotConfiguration;
 	public final fun getDeviceInfo ()Lkotlin/jvm/functions/Function1;
+	public final fun getDoQRCodeLogin ()Z
 	public final synthetic fun getFirstReconnectDelayMillis ()J
 	public final fun getHeartbeatPeriodMillis ()J
 	public final fun getHeartbeatStrategy ()Lnet/mamoe/mirai/utils/BotConfiguration$HeartbeatStrategy;
@@ -6142,6 +6149,7 @@ public class net/mamoe/mirai/utils/BotConfiguration {
 	public final fun setContactListCache (Lnet/mamoe/mirai/utils/BotConfiguration$ContactListCache;)V
 	public final fun setConvertLineSeparator (Z)V
 	public final fun setDeviceInfo (Lkotlin/jvm/functions/Function1;)V
+	public final fun setDoQRCodeLogin (Z)V
 	public final synthetic fun setFirstReconnectDelayMillis (J)V
 	public final fun setHeartbeatPeriodMillis (J)V
 	public final fun setHeartbeatStrategy (Lnet/mamoe/mirai/utils/BotConfiguration$HeartbeatStrategy;)V
@@ -6496,6 +6504,10 @@ public abstract class net/mamoe/mirai/utils/LoginSolver {
 	public static final field Companion Lnet/mamoe/mirai/utils/LoginSolver$Companion;
 	public static final field Default Lnet/mamoe/mirai/utils/LoginSolver;
 	public fun <init> ()V
+	public fun createQRCodeLoginListener (Lnet/mamoe/mirai/Bot;)Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener;
+	public fun getQrCodeEcLevel ()I
+	public fun getQrCodeMargin ()I
+	public fun getQrCodeSize ()I
 	public fun isSliderCaptchaSupported ()Z
 	public fun onSolveDeviceVerification (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/utils/DeviceVerificationRequests;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun onSolvePicCaptcha (Lnet/mamoe/mirai/Bot;[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -6505,6 +6517,22 @@ public abstract class net/mamoe/mirai/utils/LoginSolver {
 
 public final class net/mamoe/mirai/utils/LoginSolver$Companion {
 	public final synthetic fun getDefault ()Lnet/mamoe/mirai/utils/LoginSolver;
+}
+
+public abstract interface class net/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener {
+	public abstract fun onFetchQRCode (Lnet/mamoe/mirai/Bot;[B)V
+	public abstract fun onStatusChanged (Lnet/mamoe/mirai/Bot;Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;)V
+}
+
+public final class net/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State : java/lang/Enum {
+	public static final field CANCELLED Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;
+	public static final field CONFIRMED Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;
+	public static final field DEFAULT Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;
+	public static final field TIMEOUT Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;
+	public static final field WAITING_FOR_CONFIRM Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;
+	public static final field WAITING_FOR_SCAN Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;
+	public static fun valueOf (Ljava/lang/String;)Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;
+	public static fun values ()[Lnet/mamoe/mirai/utils/LoginSolver$QRCodeLoginListener$State;
 }
 
 public abstract interface annotation class net/mamoe/mirai/utils/MiraiExperimentalApi : java/lang/annotation/Annotation {
