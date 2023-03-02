@@ -10,16 +10,25 @@
 
 package net.mamoe.mirai.internal
 
+import net.mamoe.mirai.auth.BotAuthorization
+import net.mamoe.mirai.utils.SecretsProtection
 
-internal expect class BotAccount {
-    internal val id: Long
-    val phoneNumber: String
 
-    constructor(id: Long, passwordMd5: ByteArray, phoneNumber: String = "")
-    constructor(id: Long, passwordPlainText: String, phoneNumber: String = "")
+internal class BotAccount(
+    internal val id: Long,
+    val authorization: BotAuthorization,
+    val phoneNumber: String = "",
+) {
+    constructor(
+        id: Long, pwd: String, phoneNumber: String = ""
+    ) : this(id, BotAuthorization.byPassword(pwd), phoneNumber)
 
-    val passwordMd5: ByteArray
+    var accountSecretsKeyBuffer: SecretsProtection.EscapedByteBuffer? = null
 
-    override fun equals(other: Any?): Boolean
-    override fun hashCode(): Int
+    val accountSecretsKey: ByteArray
+        get() {
+            accountSecretsKeyBuffer?.let { return it.asByteArray }
+            error("accountSecretsKey not yet available")
+        }
+
 }
