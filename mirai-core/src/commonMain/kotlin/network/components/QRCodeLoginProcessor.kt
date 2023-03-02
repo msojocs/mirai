@@ -11,13 +11,13 @@ package net.mamoe.mirai.internal.network.components
 
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
+import net.mamoe.mirai.auth.QRCodeLoginListener
 import net.mamoe.mirai.internal.network.QQAndroidClient
 import net.mamoe.mirai.internal.network.QRCodeLoginData
 import net.mamoe.mirai.internal.network.component.ComponentKey
 import net.mamoe.mirai.internal.network.handler.NetworkHandler
 import net.mamoe.mirai.internal.network.protocol.packet.login.WtLogin
 import net.mamoe.mirai.internal.utils.MiraiProtocolInternal.Companion.asInternal
-import net.mamoe.mirai.utils.LoginSolver
 import net.mamoe.mirai.utils.MiraiLogger
 import net.mamoe.mirai.utils.debug
 
@@ -34,11 +34,6 @@ internal interface QRCodeLoginProcessor {
         internal val NOOP = object : QRCodeLoginProcessor {}
 
         fun parse(ssoContext: SsoProcessorContext, logger: MiraiLogger): QRCodeLoginProcessor {
-            if (!ssoContext.bot.configuration.doQRCodeLogin) return NOOP
-            check(ssoContext.bot.configuration.protocol.asInternal.canDoQRCodeLogin) {
-                "The login protocol must be ANDROID_WATCH or MACOS while enabling qrcode login." +
-                        "Set it by `bot.configuration.protocol = BotConfiguration.MiraiProtocol.ANDROID_WATCH`."
-            }
             return QRCodeLoginProcessorPreLoaded(ssoContext, logger)
         }
     }
@@ -49,6 +44,11 @@ internal class QRCodeLoginProcessorPreLoaded(
     private val logger: MiraiLogger,
 ) : QRCodeLoginProcessor {
     override fun prepareProcess(handler: NetworkHandler, client: QQAndroidClient): QRCodeLoginProcessor {
+        check(ssoContext.bot.configuration.protocol.asInternal.canDoQRCodeLogin) {
+            "The login protocol must be ANDROID_WATCH or MACOS while enabling qrcode login." +
+                    "Set it by `bot.configuration.protocol = BotConfiguration.MiraiProtocol.ANDROID_WATCH`."
+        }
+
         val loginSolver = ssoContext.bot.configuration.loginSolver
             ?: throw IllegalStateException(
                 "No LoginSolver found while enabling qrcode login. " +
@@ -60,27 +60,32 @@ internal class QRCodeLoginProcessorPreLoaded(
         val qrCodeLoginListener = loginSolver.createQRCodeLoginListener(client.bot)
 
         return loginSolver.run {
-            QRCodeLoginProcessorImpl(qrCodeLoginListener, qrCodeSize, qrCodeMargin, qrCodeEcLevel, logger)
+            QRCodeLoginProcessorImpl(qrCodeLoginListener, logger)
         }
     }
 }
 
 internal class QRCodeLoginProcessorImpl(
-    private val qrCodeLoginListener: LoginSolver.QRCodeLoginListener,
-    private val size: Int,
-    private val margin: Int,
-    private val ecLevel: Int,
+    private val qrCodeLoginListener: QRCodeLoginListener,
     private val logger: MiraiLogger,
 ) : QRCodeLoginProcessor {
 
-    private var state = atomic(LoginSolver.QRCodeLoginListener.State.DEFAULT)
+    private var state = atomic(QRCodeLoginListener.State.DEFAULT)
 
     private suspend fun requestQRCode(
         handler: NetworkHandler,
         client: QQAndroidClient
     ): WtLogin.TransEmp.Response.FetchQRCode {
         logger.debug { "requesting qrcode." }
-        val resp = handler.sendAndExpect(WtLogin.TransEmp.FetchQRCode(client, size, margin, ecLevel), attempts = 1)
+        val resp = handler.sendAndExpect(
+            WtLogin.TransEmp.FetchQRCode(
+                client,
+                size = qrCodeLoginListener.qrCodeSize,
+                margin = qrCodeLoginListener.qrCodeMargin,
+                ecLevel = qrCodeLoginListener.qrCodeEcLevel,
+            ),
+            attempts = 1
+        )
         check(resp is WtLogin.TransEmp.Response.FetchQRCode) { "Cannot fetch qrcode, resp=$resp" }
         qrCodeLoginListener.onFetchQRCode(handler.context.bot, resp.imageData)
         return resp
@@ -133,24 +138,24 @@ internal class QRCodeLoginProcessorImpl(
         }
     }
 
-    private fun WtLogin.TransEmp.Response.mapProtocolState(): LoginSolver.QRCodeLoginListener.State {
+    private fun WtLogin.TransEmp.Response.mapProtocolState(): QRCodeLoginListener.State {
         return when (this) {
             is WtLogin.TransEmp.Response.QRCodeStatus -> when (this.state) {
                 WtLogin.TransEmp.Response.QRCodeStatus.State.WAITING_FOR_SCAN ->
-                    LoginSolver.QRCodeLoginListener.State.WAITING_FOR_SCAN
+                    QRCodeLoginListener.State.WAITING_FOR_SCAN
 
                 WtLogin.TransEmp.Response.QRCodeStatus.State.WAITING_FOR_CONFIRM ->
-                    LoginSolver.QRCodeLoginListener.State.WAITING_FOR_CONFIRM
+                    QRCodeLoginListener.State.WAITING_FOR_CONFIRM
 
                 WtLogin.TransEmp.Response.QRCodeStatus.State.CANCELLED ->
-                    LoginSolver.QRCodeLoginListener.State.CANCELLED
+                    QRCodeLoginListener.State.CANCELLED
 
                 WtLogin.TransEmp.Response.QRCodeStatus.State.TIMEOUT ->
-                    LoginSolver.QRCodeLoginListener.State.TIMEOUT
+                    QRCodeLoginListener.State.TIMEOUT
             }
 
             is WtLogin.TransEmp.Response.QRCodeConfirmed ->
-                LoginSolver.QRCodeLoginListener.State.CONFIRMED
+                QRCodeLoginListener.State.CONFIRMED
 
             is WtLogin.TransEmp.Response.FetchQRCode ->
                 error("$this cannot be mapped to listener state.")
