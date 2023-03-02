@@ -383,6 +383,7 @@ public val MessageSource.kind: MessageSourceKind
     get() = when (this) {
         is OnlineMessageSource -> kind
         is OfflineMessageSource -> kind
+        else -> error("unknown message source")
     }
 
 /**
@@ -477,6 +478,7 @@ public inline val MessageSource.bot: Bot
     get() = when (this) {
         is OnlineMessageSource -> bot
         is OfflineMessageSource -> Bot.getInstance(botId)
+        else -> error("unknown bot of message source")
     }
 
 /**
@@ -489,6 +491,7 @@ public inline val MessageSource.botOrNull: Bot?
     get() = when (this) {
         is OnlineMessageSource -> bot
         is OfflineMessageSource -> Bot.getInstanceOrNull(botId)
+        else -> error("unknown bot of message source")
     }
 
 
