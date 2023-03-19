@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Mamoe Technologies and contributors.
+ * Copyright 2019-2023 Mamoe Technologies and contributors.
  *
  * 此源代码的使用受 GNU AFFERO GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
  * Use of this source code is governed by the GNU AGPLv3 license that can be found through the following link.
@@ -11,17 +11,13 @@ package net.mamoe.mirai.internal.network.components
 
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import net.mamoe.mirai.auth.BotAuthInfo
-import net.mamoe.mirai.auth.BotAuthorization
-import net.mamoe.mirai.auth.BotAuthorizationResult
-import net.mamoe.mirai.auth.MiraiInternalBotAuthComponent
+import net.mamoe.mirai.auth.*
 import net.mamoe.mirai.internal.network.Packet
 import net.mamoe.mirai.internal.network.QQAndroidClient
 import net.mamoe.mirai.internal.network.QRCodeLoginData
 import net.mamoe.mirai.internal.network.WLoginSigInfo
+import net.mamoe.mirai.internal.network.auth.AuthControl
+import net.mamoe.mirai.internal.network.auth.BotAuthorizationWithSecretsProtection
 import net.mamoe.mirai.internal.network.component.ComponentKey
 import net.mamoe.mirai.internal.network.handler.NetworkHandler
 import net.mamoe.mirai.internal.network.handler.logger
@@ -41,10 +37,7 @@ import net.mamoe.mirai.network.UnsupportedSliderCaptchaException
 import net.mamoe.mirai.network.WrongPasswordException
 import net.mamoe.mirai.utils.*
 import net.mamoe.mirai.utils.BotConfiguration.MiraiProtocol
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlin.jvm.Volatile
 
 /**
@@ -171,7 +164,7 @@ internal class SsoProcessorImpl(
                 botAuthInfo,
                 ssoContext.bot.account.authorization,
                 ssoContext.bot.network.logger,
-                ssoContext.bot,
+                ssoContext.bot.coroutineContext, // do not use network context because network may restart whilst auth control should keep alive
             )
         }
 
@@ -184,9 +177,11 @@ internal class SsoProcessorImpl(
         if (authControl == null) {
             ssoContext.bot.account.let { account ->
                 if (account.accountSecretsKeyBuffer == null) {
-                    account.accountSecretsKeyBuffer = SecretsProtection.EscapedByteBuffer(
-                        account.authorization.calculateSecretsKey(botAuthInfo)
-                    )
+
+                    account.accountSecretsKeyBuffer = when (val authorization = account.authorization) {
+                        is BotAuthorizationWithSecretsProtection -> authorization.calculateSecretsKeyImpl(botAuthInfo)
+                        else -> SecretsProtection.EscapedByteBuffer(authorization.calculateSecretsKey(botAuthInfo))
+                    }
                 }
             }
 
@@ -222,16 +217,14 @@ internal class SsoProcessorImpl(
             ssoContext.bot.components[EcdhInitialPublicKeyUpdater].refreshInitialPublicKeyAndApplyEcdh()
 
             when (val authw = authControl0.acquireAuth().also { nextAuthMethod = it }) {
-                is AuthMethod.DirectError -> throw authw.exception
-
                 is AuthMethod.Error -> {
                     authControl = null
-                    authControl0.exceptionCollector.collectThrow(authw.exception)
+                    throw authw.exception
                 }
 
                 AuthMethod.NotAvailable -> {
                     authControl = null
-                    authControl0.exceptionCollector.collectThrow(IllegalStateException("No more auth method available"))
+                    error("No more auth method available")
                 }
 
                 is AuthMethod.Pwd -> {
@@ -250,16 +243,15 @@ internal class SsoProcessorImpl(
             authControl!!.actComplete()
             authControl = null
         } catch (exception: Throwable) {
-            authControl0.exceptionCollector.collectException(exception)
+            if (exception is SelectorRequireReconnectException) {
+                throw exception
+            }
 
             ssoContext.bot.network.logger.warning({ "Failed with auth method: $nextAuthMethod" }, exception)
+            authControl0.exceptionCollector.collectException(exception)
 
-            if (nextAuthMethod is AuthMethod.DirectError) { // @TestOnly
-                authControl0.actResume()
-            } else if (nextAuthMethod !is AuthMethod.Error) {
-                if (exception !is SelectorRequireReconnectException) { // login not done
-                    authControl0.actFailed(exception)
-                }
+            if (nextAuthMethod !is AuthMethod.Error && nextAuthMethod != null) {
+                authControl0.actMethodFailed(exception)
             }
 
             if (exception is NetworkException) {
@@ -267,7 +259,8 @@ internal class SsoProcessorImpl(
             }
 
             if (nextAuthMethod == null || nextAuthMethod is AuthMethod.NotAvailable || nextAuthMethod is AuthMethod.Error) {
-                throw exception
+                authControl = null
+                authControl0.exceptionCollector.throwLast()
             }
 
             throw SelectorRequireReconnectException()
@@ -279,190 +272,23 @@ internal class SsoProcessorImpl(
 
 
     sealed class AuthMethod {
-        object NotAvailable : AuthMethod()
+        object NotAvailable : AuthMethod() {
+            override fun toString(): String = "NotAvailable"
+        }
 
         object QRCode : AuthMethod() {
-            override fun toString(): String {
-                return "QRCode"
-            }
+            override fun toString(): String = "QRCode"
         }
 
         class Pwd(val passwordMd5: SecretsProtection.EscapedByteBuffer) : AuthMethod() {
-            override fun toString(): String {
-                return "Password@${hashCode()}"
-            }
+            override fun toString(): String = "Password@${hashCode()}"
         }
 
         /**
          * Exception in [BotAuthorization]
          */
         class Error(val exception: Throwable) : AuthMethod() {
-            override fun toString(): String {
-                return "Error[$exception]@${hashCode()}"
-            }
-        }
-
-        /**
-         * For mocking a login method throw a exception
-         */
-        @TestOnly
-        class DirectError(val exception: Throwable) : AuthMethod() {
-            override fun toString(): String {
-                return "DirectError[$exception]@${hashCode()}"
-            }
-        }
-    }
-
-
-    @TestOnly
-    internal interface SsoProcessorAuthComponent : MiraiInternalBotAuthComponent {
-        suspend fun emit(method: AuthMethod)
-        suspend fun emitDirectError(error: Throwable) {
-            emit(AuthMethod.DirectError(error))
-        }
-
-
-        val botAuthorizationResult: BotAuthorizationResult
-    }
-
-    internal class AuthControl(
-        private val botAuthInfo: BotAuthInfo,
-        private val authorization: BotAuthorization,
-        private val logger: MiraiLogger,
-        private val scope: CoroutineScope,
-    ) {
-        internal val exceptionCollector = ExceptionCollector()
-
-        @Volatile
-        private var authorizationContinuation: Continuation<Unit>? = null
-
-        @Volatile
-        private var authRspFuture = initCompletableDeferred()
-
-        @Volatile
-        private var isCompleted = false
-
-        private val rsp = object : BotAuthorizationResult {}
-
-        @Suppress("RemoveExplicitTypeArguments")
-        @OptIn(TestOnly::class)
-        private val authComponent = object : SsoProcessorAuthComponent {
-            override val botAuthorizationResult: BotAuthorizationResult get() = rsp
-
-            override suspend fun emit(method: AuthMethod) {
-                logger.verbose { "[AuthControl/emit] Trying emit $method" }
-
-                if (isCompleted) {
-                    val msg = "[AuthControl/emit] Failed to emit $method because control completed"
-
-                    error(msg.also { logger.verbose(it) })
-                }
-                suspendCoroutine<Unit> { next ->
-                    val rspTarget = authRspFuture
-                    if (!rspTarget.complete(method)) {
-                        val msg = "[AuthControl/emit] Failed to emit $method because auth response completed"
-
-                        error(msg.also { logger.verbose(it) })
-                    }
-                    authorizationContinuation = next
-                    logger.verbose { "[AuthControl/emit] Emitted $method to $rspTarget" }
-                }
-                logger.verbose { "[AuthControl/emit] Authorization resumed after $method" }
-            }
-
-            override suspend fun authByPassword(passwordMd5: SecretsProtection.EscapedByteBuffer): BotAuthorizationResult {
-                emit(AuthMethod.Pwd(passwordMd5))
-                return rsp
-            }
-
-            override suspend fun authByPassword(password: String): BotAuthorizationResult {
-                return authByPassword(password.md5())
-            }
-
-            override suspend fun authByPassword(passwordMd5: ByteArray): BotAuthorizationResult {
-                return authByPassword(SecretsProtection.EscapedByteBuffer(passwordMd5))
-            }
-
-            override suspend fun authByQRCode(): BotAuthorizationResult {
-                emit(AuthMethod.QRCode)
-                return rsp
-            }
-        }
-
-        init {
-            scope.launch {
-                try {
-                    logger.verbose { "[AuthControl/auth] Authorization started" }
-
-                    authorization.authorize(authComponent, botAuthInfo)
-
-                    logger.verbose { "[AuthControl/auth] Authorization exited" }
-
-                    isCompleted = true
-                    authRspFuture.complete(AuthMethod.NotAvailable)
-
-                } catch (e: Throwable) {
-                    logger.verbose({ "[AuthControl/auth] Authorization failed" }, e)
-
-                    isCompleted = true
-                    authRspFuture.complete(AuthMethod.Error(e))
-                }
-            }
-        }
-
-        private fun onSpinWait() {}
-        suspend fun acquireAuth(): AuthMethod {
-            val authTarget = authRspFuture
-            logger.verbose { "[AuthControl/acquire] Acquiring auth method with $authTarget" }
-            val rsp = authTarget.await()
-            logger.debug { "[AuthControl/acquire] Authorization responded: $authTarget, $rsp" }
-
-            while (authorizationContinuation == null && !isCompleted) {
-                onSpinWait()
-            }
-            logger.verbose { "[AuthControl/acquire] authorizationContinuation setup: $authorizationContinuation, $isCompleted" }
-
-            return rsp
-        }
-
-        fun actFailed(cause: Throwable) {
-            logger.verbose { "[AuthControl/resume] Fire auth failed with cause: $cause" }
-
-            authRspFuture = initCompletableDeferred()
-            authorizationContinuation!!.let { cont ->
-                authorizationContinuation = null
-                cont.resumeWith(Result.failure(cause))
-            }
-        }
-
-        @TestOnly // same as act failed
-        fun actResume() {
-            logger.verbose { "[AuthControl/resume] Fire auth resume" }
-
-            authRspFuture = initCompletableDeferred()
-            authorizationContinuation!!.let { cont ->
-                authorizationContinuation = null
-                cont.resume(Unit)
-            }
-        }
-
-        fun actComplete() {
-            logger.verbose { "[AuthControl/resume] Fire auth completed" }
-
-            isCompleted = true
-            authRspFuture = CompletableDeferred(AuthMethod.NotAvailable)
-            authorizationContinuation!!.let { cont ->
-                authorizationContinuation = null
-                cont.resume(Unit)
-            }
-        }
-
-        private fun initCompletableDeferred(): CompletableDeferred<AuthMethod> {
-            return CompletableDeferred<AuthMethod>().also { df ->
-                df.invokeOnCompletion {
-                    logger.debug { "[AuthControl/cd] $df completed with $it" }
-                }
-            }
+            override fun toString(): String = "Error[$exception]@${hashCode()}"
         }
     }
 

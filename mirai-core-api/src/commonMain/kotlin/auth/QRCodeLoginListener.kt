@@ -10,6 +10,7 @@
 package net.mamoe.mirai.auth
 
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.network.LoginFailedException
 
 /**
  * 二维码扫描登录监听器
@@ -19,12 +20,12 @@ import net.mamoe.mirai.Bot
 public interface QRCodeLoginListener {
 
     /**
-     * 使用二维码登录时获取的二维码图片大小.
+     * 使用二维码登录时获取的二维码图片大小字节数.
      */
     public val qrCodeSize: Int get() = 3
 
     /**
-     * 使用二维码登录时获取的二维码边框宽度.
+     * 使用二维码登录时获取的二维码边框宽度像素.
      */
     public val qrCodeMargin: Int get() = 4
 
@@ -34,9 +35,14 @@ public interface QRCodeLoginListener {
     public val qrCodeEcLevel: Int get() = 2
 
     /**
+     * 每隔 [qrCodeStateUpdateInterval] 毫秒更新一次[二维码状态][State]
+     */
+    public val qrCodeStateUpdateInterval: Long get() = 5000
+
+    /**
      * 从服务器获取二维码时调用，在下级显示二维码并扫描.
      *
-     * note: [data] 为图像数据
+     * @param data 二维码图像数据 (文件)
      */
     public fun onFetchQRCode(bot: Bot, data: ByteArray)
 
@@ -44,7 +50,15 @@ public interface QRCodeLoginListener {
      * 当二维码状态变化时调用.
      * @see State
      */
-    public fun onStatusChanged(bot: Bot, state: State)
+    public fun onStateChanged(bot: Bot, state: State)
+
+    /**
+     * 每隔一段时间会调用一次此函数
+     *
+     * 在此函数抛出 [LoginFailedException] 以中断登录
+     */
+    public fun onIntervalLoop() {
+    }
 
     public enum class State {
         /**
