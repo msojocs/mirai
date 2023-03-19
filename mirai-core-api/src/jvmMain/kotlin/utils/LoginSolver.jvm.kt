@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Mamoe Technologies and contributors.
+ * Copyright 2019-2023 Mamoe Technologies and contributors.
  *
  * 此源代码的使用受 GNU AFFERO GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
  * Use of this source code is governed by the GNU AGPLv3 license that can be found through the following link.
@@ -92,7 +92,7 @@ public class StandardCharImageLoginSolver @JvmOverloads constructor(
                 } catch (e: Exception) {
                     logger.warning("[QRCodeLogin] 无法写出二维码图片. 请尽量关闭终端个性化样式后扫描二维码字符图片", e)
                     logger.warning(
-                        "[QRCodeLogin] Failed to export qrcode image. Please try to scan the char-image after disabling custom terminal style indeed.",
+                        "[QRCodeLogin] Failed to export qrcode image. Please try to scan the char-image after disabling custom terminal style.",
                         e
                     )
                 }
@@ -121,7 +121,7 @@ public class StandardCharImageLoginSolver @JvmOverloads constructor(
                 }
             }
 
-            override fun onStatusChanged(bot: Bot, state: QRCodeLoginListener.State) {
+            override fun onStateChanged(bot: Bot, state: QRCodeLoginListener.State) {
                 val logger = loggerSupplier(bot)
                 logger.info {
                     buildString {
@@ -205,6 +205,9 @@ public class StandardCharImageLoginSolver @JvmOverloads constructor(
         logger.info { "[SliderCaptcha] @see https://docs.mirai.mamoe.net/mirai-login-solver-selenium/" }
         logger.info { "[SliderCaptcha] 或者输入 TxCaptchaHelper 来使用 TxCaptchaHelper 完成滑动验证码" }
         logger.info { "[SliderCaptcha] Or type `TxCaptchaHelper` to resolve slider captcha with TxCaptchaHelper.apk" }
+        logger.warning { "[SliderCaptcha] TxCaptchaHelper 的在线服务疑似被屏蔽，可能无法使用。TxCaptchaHelper 现已无法满足登录QQ机器人，请在以下链接下载全新的验证器" }
+        logger.warning { "[SliderCaptcha] The service of `TxCaptchaHelper` might be blocked. We recommend you to download the new login solver plugin in below link." }
+        logger.warning { "[SliderCaptcha] @see https://github.com/KasukuSakura/mirai-login-solver-sakura" }
         logger.info { "[SliderCaptcha] Captcha link: $url" }
 
         suspend fun runTxCaptchaHelper(): String {

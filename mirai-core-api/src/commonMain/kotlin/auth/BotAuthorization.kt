@@ -10,6 +10,7 @@
 package net.mamoe.mirai.auth
 
 import net.mamoe.mirai.BotFactory
+import net.mamoe.mirai.Mirai
 import net.mamoe.mirai.network.LoginFailedException
 import net.mamoe.mirai.network.RetryLaterException
 import net.mamoe.mirai.utils.*
@@ -38,7 +39,7 @@ public interface BotAuthorization {
      * ## 示例代码
      * ```kotlin
      * override suspend fun authorize(
-     *      authComponent: BotAuthComponent,
+     *      authComponent: BotAuthSession,
      *      bot: BotAuthInfo,
      * ) {
      *      return kotlin.runCatching {
@@ -50,9 +51,9 @@ public interface BotAuthorization {
      * ```
      */
     public suspend fun authorize(
-        authComponent: BotAuthComponent,
-        bot: BotAuthInfo,
-    ): BotAuthorizationResult
+        session: BotAuthSession,
+        info: BotAuthInfo,
+    ): BotAuthResult
 
 
     /**
@@ -60,73 +61,40 @@ public interface BotAuthorization {
      */
     public fun calculateSecretsKey(
         bot: BotAuthInfo,
-    ): ByteArray {
-        return bot.deviceInfo.guid + bot.id.toByteArray()
-    }
+    ): ByteArray = bot.deviceInfo.guid + bot.id.toByteArray()
 
     public companion object {
         @JvmStatic
-        public fun byPassword(password: String): BotAuthorization {
-            return byPassword(password.md5())
-        }
+        public fun byPassword(password: String): BotAuthorization = byPassword(password.md5())
 
         @JvmStatic
-        public fun byPassword(passwordMd5: ByteArray): BotAuthorization {
-            return byPassword(SecretsProtection.EscapedByteBuffer(passwordMd5))
-        }
-
-        private fun byPassword(passwordMd5: SecretsProtection.EscapedByteBuffer): BotAuthorization {
-            return object : MiraiInternalBotAuthorization {
-                override fun calculateSecretsKey1(bot: BotAuthInfo): SecretsProtection.EscapedByteBuffer {
-                    return passwordMd5
-                }
-
-                override suspend fun authorize(
-                    authComponent: MiraiInternalBotAuthComponent,
-                    bot: BotAuthInfo
-                ): BotAuthorizationResult {
-                    return authComponent.authByPassword(passwordMd5)
-                }
-
-                override fun toString(): String {
-                    return "BotAuthorization.byPassword(<ERASED>)"
-                }
-            }
-        }
+        public fun byPassword(passwordMd5: ByteArray): BotAuthorization = factory.byPassword(passwordMd5)
 
         @JvmStatic
-        public fun byQRCode(): BotAuthorization {
-            return object : BotAuthorization {
-                override suspend fun authorize(
-                    authComponent: BotAuthComponent,
-                    bot: BotAuthInfo
-                ): BotAuthorizationResult {
-                    return authComponent.authByQRCode()
-                }
-
-                override fun toString(): String {
-                    return "BotAuthorization.byQRCode()"
-                }
-            }
-        }
+        public fun byQRCode(): BotAuthorization = factory.byQRCode()
 
         public operator fun invoke(
-            block: suspend (BotAuthComponent, BotAuthInfo) -> BotAuthorizationResult
+            block: suspend (BotAuthSession, BotAuthInfo) -> BotAuthResult
         ): BotAuthorization {
             return object : BotAuthorization {
                 override suspend fun authorize(
-                    authComponent: BotAuthComponent,
-                    bot: BotAuthInfo
-                ): BotAuthorizationResult {
-                    return block(authComponent, bot)
+                    session: BotAuthSession,
+                    info: BotAuthInfo
+                ): BotAuthResult {
+                    return block(session, info)
                 }
             }
+        }
+
+        private val factory: DefaultBotAuthorizationFactory by lazy {
+            Mirai // Ensure services loaded
+            loadService()
         }
     }
 }
 
 @NotStableForInheritance
-public interface BotAuthorizationResult
+public interface BotAuthResult
 
 @NotStableForInheritance
 public interface BotAuthInfo {
@@ -136,39 +104,25 @@ public interface BotAuthInfo {
 }
 
 @NotStableForInheritance
-public interface BotAuthComponent {
-    public suspend fun authByPassword(password: String): BotAuthorizationResult
-    public suspend fun authByPassword(passwordMd5: ByteArray): BotAuthorizationResult
-    public suspend fun authByQRCode(): BotAuthorizationResult
+public interface BotAuthSession {
+    /**
+     * @throws LoginFailedException
+     */
+    public suspend fun authByPassword(password: String): BotAuthResult
+
+    /**
+     * @throws LoginFailedException
+     */
+    public suspend fun authByPassword(passwordMd5: ByteArray): BotAuthResult
+
+    /**
+     * @throws LoginFailedException
+     */
+    public suspend fun authByQRCode(): BotAuthResult
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//// Internal: for better performance
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-@NotStableForInheritance
-@MiraiInternalApi
-public interface MiraiInternalBotAuthComponent : BotAuthComponent {
-    public suspend fun authByPassword(passwordMd5: SecretsProtection.EscapedByteBuffer): BotAuthorizationResult
+internal interface DefaultBotAuthorizationFactory {
+    fun byPassword(passwordMd5: ByteArray): BotAuthorization
+    fun byQRCode(): BotAuthorization
 }
-
-@NotStableForInheritance
-@MiraiInternalApi
-public interface MiraiInternalBotAuthorization : BotAuthorization {
-    override fun calculateSecretsKey(bot: BotAuthInfo): ByteArray {
-        return calculateSecretsKey1(bot).asByteArray
-    }
-
-    public fun calculateSecretsKey1(
-        bot: BotAuthInfo,
-    ): SecretsProtection.EscapedByteBuffer
-
-    public suspend fun authorize(authComponent: MiraiInternalBotAuthComponent, bot: BotAuthInfo): BotAuthorizationResult
-
-    override suspend fun authorize(authComponent: BotAuthComponent, bot: BotAuthInfo): BotAuthorizationResult {
-        return authorize(authComponent as MiraiInternalBotAuthComponent, bot)
-    }
-}
-
-

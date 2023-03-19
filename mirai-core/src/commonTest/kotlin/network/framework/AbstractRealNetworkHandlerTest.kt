@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Mamoe Technologies and contributors.
+ * Copyright 2019-2023 Mamoe Technologies and contributors.
  *
  * 此源代码的使用受 GNU AFFERO GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
  * Use of this source code is governed by the GNU AGPLv3 license that can be found through the following link.
@@ -14,14 +14,14 @@ package net.mamoe.mirai.internal.network.framework
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import net.mamoe.mirai.auth.BotAuthInfo
-import net.mamoe.mirai.auth.BotAuthorizationResult
-import net.mamoe.mirai.auth.MiraiInternalBotAuthComponent
+import net.mamoe.mirai.auth.BotAuthResult
 import net.mamoe.mirai.internal.*
 import net.mamoe.mirai.internal.contact.uin
 import net.mamoe.mirai.internal.network.KeyWithCreationTime
 import net.mamoe.mirai.internal.network.KeyWithExpiry
 import net.mamoe.mirai.internal.network.WLoginSigInfo
 import net.mamoe.mirai.internal.network.WLoginSimpleInfo
+import net.mamoe.mirai.internal.network.auth.BotAuthSessionInternal
 import net.mamoe.mirai.internal.network.component.ComponentKey
 import net.mamoe.mirai.internal.network.component.ConcurrentComponentStorage
 import net.mamoe.mirai.internal.network.component.setAll
@@ -123,28 +123,20 @@ internal abstract class AbstractRealNetworkHandlerTest<H : NetworkHandler> : Abs
                     override val configuration: BotConfiguration
                         get() = bot.configuration
                 }
-                val rsp = object : BotAuthorizationResult {}
+                val rsp = object : BotAuthResult {}
 
-                val botAuthComponents = object : MiraiInternalBotAuthComponent {
-                    override suspend fun authByPassword(passwordMd5: SecretsProtection.EscapedByteBuffer): BotAuthorizationResult {
+                val session = object : BotAuthSessionInternal() {
+                    override suspend fun authByPassword(passwordMd5: SecretsProtection.EscapedByteBuffer): BotAuthResult {
                         return rsp
                     }
 
-                    override suspend fun authByPassword(password: String): BotAuthorizationResult {
-                        return authByPassword(password.md5())
-                    }
-
-                    override suspend fun authByPassword(passwordMd5: ByteArray): BotAuthorizationResult {
-                        return authByPassword(SecretsProtection.EscapedByteBuffer(passwordMd5))
-                    }
-
-                    override suspend fun authByQRCode(): BotAuthorizationResult {
-                        TODO("Not yet implemented")
+                    override suspend fun authByQRCode(): BotAuthResult {
+                        return rsp
                     }
 
                 }
 
-                bot.account.authorization.authorize(botAuthComponents, botAuthInfo)
+                bot.account.authorization.authorize(session, botAuthInfo)
                 bot.account.accountSecretsKeyBuffer = SecretsProtection.EscapedByteBuffer(
                     bot.account.authorization.calculateSecretsKey(botAuthInfo)
                 )

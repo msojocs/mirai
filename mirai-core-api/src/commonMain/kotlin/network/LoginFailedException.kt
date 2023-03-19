@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Mamoe Technologies and contributors.
+ * Copyright 2019-2023 Mamoe Technologies and contributors.
  *
  * 此源代码的使用受 GNU AFFERO GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
  * Use of this source code is governed by the GNU AGPLv3 license that can be found through the following link.
@@ -39,14 +39,17 @@ public class WrongPasswordException @MiraiInternalApi constructor(
 
 /**
  * 二维码扫码账号与 BOT 账号不一致。
+ *
+ * @since 2.15
  */
-public class InconsistentBotException @MiraiInternalApi constructor(
+public class InconsistentBotIdException @MiraiInternalApi constructor(
     public val expected: Long,
     public val actual: Long,
     message: String? = null
 ) : LoginFailedException(
     true,
-    message ?: "trying to logging a bot which is inconsistent from BotFactory, expected=$expected, actual=$actual."
+    message
+        ?: "trying to logging in a bot whose id is different from the one provided to BotFactory.newBot, expected=$expected, actual=$actual."
 )
 
 /**
@@ -97,6 +100,8 @@ public class UnsupportedSliderCaptchaException(message: String?) : UnsupportedCa
 
 /**
  * 需要二维码登录, 且当前 [LoginSolver] 不支持时抛出
+ *
+ * @since 2.15
  */
 public class UnsupportedQRCodeCaptchaException(message: String?) : UnsupportedCaptchaMethodException(true, message)
 
