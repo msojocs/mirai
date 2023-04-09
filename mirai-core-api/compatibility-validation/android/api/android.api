@@ -3226,7 +3226,6 @@ public class net/mamoe/mirai/message/data/ArkAppConfig {
 
 public final class net/mamoe/mirai/message/data/ArkAppConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppConfig$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppConfig;
@@ -3292,7 +3291,6 @@ public final class net/mamoe/mirai/message/data/ArkAppGiftData {
 
 public final class net/mamoe/mirai/message/data/ArkAppGiftData$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppGiftData$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppGiftData;
@@ -3342,7 +3340,6 @@ public final class net/mamoe/mirai/message/data/ArkAppGroupPushData {
 
 public final class net/mamoe/mirai/message/data/ArkAppGroupPushData$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppGroupPushData$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppGroupPushData;
@@ -3403,7 +3400,6 @@ public class net/mamoe/mirai/message/data/ArkAppMessage : net/mamoe/mirai/messag
 
 public final class net/mamoe/mirai/message/data/ArkAppMessage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppMessage$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppMessage;
@@ -3441,7 +3437,6 @@ public class net/mamoe/mirai/message/data/ArkAppMeta {
 
 public final class net/mamoe/mirai/message/data/ArkAppMeta$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppMeta$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppMeta;
@@ -3493,7 +3488,6 @@ public class net/mamoe/mirai/message/data/ArkAppMusic {
 
 public final class net/mamoe/mirai/message/data/ArkAppMusic$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppMusic$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppMusic;
@@ -3540,7 +3534,6 @@ public class net/mamoe/mirai/message/data/ArkAppNews {
 
 public final class net/mamoe/mirai/message/data/ArkAppNews$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppNews$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppNews;
@@ -3576,7 +3569,6 @@ public class net/mamoe/mirai/message/data/ArkAppNotification {
 
 public final class net/mamoe/mirai/message/data/ArkAppNotification$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppNotification$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppNotification;
@@ -3605,7 +3597,6 @@ public class net/mamoe/mirai/message/data/ArkAppNotification$AppInfo {
 
 public final class net/mamoe/mirai/message/data/ArkAppNotification$AppInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppNotification$AppInfo$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppNotification$AppInfo;
@@ -3632,7 +3623,6 @@ public final class net/mamoe/mirai/message/data/ArkAppNotification$Button {
 
 public final class net/mamoe/mirai/message/data/ArkAppNotification$Button$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppNotification$Button$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppNotification$Button;
@@ -3663,7 +3653,6 @@ public final class net/mamoe/mirai/message/data/ArkAppNotification$Data {
 
 public final class net/mamoe/mirai/message/data/ArkAppNotification$Data$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppNotification$Data$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppNotification$Data;
@@ -3697,7 +3686,6 @@ public class net/mamoe/mirai/message/data/ArkAppRobot {
 
 public final class net/mamoe/mirai/message/data/ArkAppRobot$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppRobot$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppRobot;
@@ -3731,7 +3719,6 @@ public final class net/mamoe/mirai/message/data/ArkAppSingleImg {
 
 public final class net/mamoe/mirai/message/data/ArkAppSingleImg$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppSingleImg$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppSingleImg;
@@ -3783,7 +3770,6 @@ public class net/mamoe/mirai/message/data/ArkAppTask {
 
 public final class net/mamoe/mirai/message/data/ArkAppTask$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppTask$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppTask;
@@ -3810,7 +3796,6 @@ public class net/mamoe/mirai/message/data/ArkAppTask$ArkAppTaskCmd {
 
 public final class net/mamoe/mirai/message/data/ArkAppTask$ArkAppTaskCmd$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppTask$ArkAppTaskCmd$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppTask$ArkAppTaskCmd;
@@ -3837,7 +3822,6 @@ public class net/mamoe/mirai/message/data/ArkAppTask$ArkAppTaskIcon {
 
 public final class net/mamoe/mirai/message/data/ArkAppTask$ArkAppTaskIcon$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/message/data/ArkAppTask$ArkAppTaskIcon$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/message/data/ArkAppTask$ArkAppTaskIcon;
@@ -6175,7 +6159,6 @@ public class net/mamoe/mirai/utils/BotConfiguration : net/mamoe/mirai/utils/Abst
 	public final fun getContactListCache ()Lnet/mamoe/mirai/utils/BotConfiguration$ContactListCache;
 	public static final fun getDefault ()Lnet/mamoe/mirai/utils/BotConfiguration;
 	public final fun getDeviceInfo ()Lkotlin/jvm/functions/Function1;
-	public final fun getDoQRCodeLogin ()Z
 	public final synthetic fun getFirstReconnectDelayMillis ()J
 	public final fun getHeartbeatPeriodMillis ()J
 	public final fun getHeartbeatStrategy ()Lnet/mamoe/mirai/utils/BotConfiguration$HeartbeatStrategy;
@@ -6201,7 +6184,6 @@ public class net/mamoe/mirai/utils/BotConfiguration : net/mamoe/mirai/utils/Abst
 	public final fun setContactListCache (Lnet/mamoe/mirai/utils/BotConfiguration$ContactListCache;)V
 	public final fun setConvertLineSeparator (Z)V
 	public final fun setDeviceInfo (Lkotlin/jvm/functions/Function1;)V
-	public final fun setDoQRCodeLogin (Z)V
 	public final synthetic fun setFirstReconnectDelayMillis (J)V
 	public final fun setHeartbeatPeriodMillis (J)V
 	public final fun setHeartbeatStrategy (Lnet/mamoe/mirai/utils/BotConfiguration$HeartbeatStrategy;)V
