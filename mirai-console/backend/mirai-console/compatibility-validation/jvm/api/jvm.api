@@ -1108,6 +1108,7 @@ public abstract interface class net/mamoe/mirai/console/data/PluginConfig : net/
 
 public abstract interface class net/mamoe/mirai/console/data/PluginData {
 	public abstract fun getSaveName ()Ljava/lang/String;
+	public fun getSaveType ()Lnet/mamoe/mirai/console/data/PluginData$SaveType;
 	public abstract fun getSerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
 	public abstract fun getUpdaterSerializer ()Lkotlinx/serialization/KSerializer;
 }
@@ -1860,7 +1861,6 @@ public final class net/mamoe/mirai/console/plugin/ResourceContainer$Companion {
 
 public final class net/mamoe/mirai/console/plugin/center/PluginCenter$PluginInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/console/plugin/center/PluginCenter$PluginInfo$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/console/plugin/center/PluginCenter$PluginInfo;
@@ -1876,7 +1876,6 @@ public final class net/mamoe/mirai/console/plugin/center/PluginCenter$PluginInfo
 
 public final class net/mamoe/mirai/console/plugin/center/PluginCenter$PluginInsight$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lnet/mamoe/mirai/console/plugin/center/PluginCenter$PluginInsight$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lnet/mamoe/mirai/console/plugin/center/PluginCenter$PluginInsight;
