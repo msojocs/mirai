@@ -13,6 +13,7 @@ package net.mamoe.mirai.contact
 
 import net.mamoe.mirai.message.action.MemberNudge
 import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.data.LikeResult
 import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.utils.ExternalResource
 import net.mamoe.mirai.utils.NotStableForInheritance
@@ -40,6 +41,7 @@ public interface AnonymousMember : Member {
         throw UnsupportedOperationException("Cannot send message to AnonymousMember")
 
     override fun nudge(): MemberNudge = throw UnsupportedOperationException("Cannot nudge AnonymousMember")
+    override suspend fun sendLike(count: Int): LikeResult = throw UnsupportedOperationException("Cannot like AnonymousMember")
     override suspend fun uploadImage(resource: ExternalResource): Image =
         throw UnsupportedOperationException("Cannot upload image to AnonymousMember")
 }

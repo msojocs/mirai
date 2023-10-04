@@ -181,6 +181,8 @@ internal object KnownPacketFactories {
         SummaryCard.ReqSummaryCard,
         ChangeFriendRemark,
         MusicSharePacket,
+        ArkPacket,
+        LikePacket,
         *FileManagement.factories
     )
 

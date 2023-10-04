@@ -51,6 +51,7 @@ import net.mamoe.mirai.internal.network.protocol.data.proto.ImMsgBody
 import net.mamoe.mirai.internal.network.protocol.data.proto.LongMsg
 import net.mamoe.mirai.internal.network.protocol.data.proto.MsgComm
 import net.mamoe.mirai.internal.network.protocol.data.proto.MsgTransmit
+import net.mamoe.mirai.internal.network.protocol.packet.chat.*
 import net.mamoe.mirai.internal.network.protocol.packet.chat.MultiMsg
 import net.mamoe.mirai.internal.network.protocol.packet.chat.NewContact
 import net.mamoe.mirai.internal.network.protocol.packet.chat.NudgePacket
@@ -641,6 +642,16 @@ internal open class MiraiImpl : IMirai, LowLevelApiAccessor {
             SummaryCard.ReqSummaryCard(bot.client, targetId),
             5000, 2
         )
+    }
+
+    override suspend fun sendLike(bot: Bot, targetId: Long, count: Int): LikeResult {
+        var c: Int = count
+        if(count > 20) c = 20
+        val res = bot.asQQAndroidBot().network.sendAndExpect(
+            LikePacket.invoke(bot.client, targetId, c),
+            5000, 2
+        )
+        return LikeResult(res.success, res.code, res.msg)
     }
 
     override suspend fun sendNudge(bot: Bot, nudge: Nudge, receiver: Contact): Boolean {

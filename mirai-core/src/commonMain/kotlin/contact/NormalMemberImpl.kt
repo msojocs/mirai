@@ -19,10 +19,12 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.data.MemberInfo
 import net.mamoe.mirai.event.broadcast
 import net.mamoe.mirai.event.events.*
+import net.mamoe.mirai.internal.asQQAndroidBot
 import net.mamoe.mirai.internal.message.protocol.outgoing.GroupTempMessageProtocolStrategy
 import net.mamoe.mirai.internal.message.protocol.outgoing.MessageProtocolStrategy
 import net.mamoe.mirai.internal.message.source.OnlineMessageSourceToTempImpl
 import net.mamoe.mirai.internal.message.source.createMessageReceipt
+import net.mamoe.mirai.internal.network.protocol.packet.chat.LikePacket
 import net.mamoe.mirai.internal.network.protocol.packet.chat.TroopManagement
 import net.mamoe.mirai.message.MessageReceipt
 import net.mamoe.mirai.message.data.Message
