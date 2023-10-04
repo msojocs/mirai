@@ -95,6 +95,15 @@ jobs:
           SNAPSHOTS_PUBLISHING_KEY: ${{ secrets.SNAPSHOTS_PUBLISHING_KEY }}
           SNAPSHOTS_PUBLISHING_URL: ${{ secrets.SNAPSHOTS_PUBLISHING_URL }}
 
+      - name: Publish Snapshots To GitHub
+        if: ${{ github.event.pusher && env.isMac == 'true' && vars.RUN_GITHUB_SNAPSHOTS == 'true' }}
+        run: ./gradlew publishAllPublicationsToMiraiRepoRepository ${{ env.gradleArgs }}
+        env:
+          MIRAI_IS_SNAPSHOTS_PUBLISHING: true
+          SNAPSHOTS_PUBLISHING_USER: ${{ github.actor }}
+          SNAPSHOTS_PUBLISHING_KEY: ${{ secrets.GITHUB_TOKEN }}
+          SNAPSHOTS_PUBLISHING_URL: ${{ secrets.SNAPSHOTS_PUBLISHING_URL }}
+
       # Upload
 
       - name: Publish MavenLocal
