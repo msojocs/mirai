@@ -120,7 +120,7 @@ private fun Project.configureMultiplatformPublication(
 
         else -> {
             // "jvm", "native", "js", "common"
-            publication.artifactId = "${project.name}-$moduleName"
+            publication.artifactId = "${project.name}-$moduleName".lowercase()
         }
     }
 }

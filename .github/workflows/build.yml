@@ -67,6 +67,16 @@ jobs:
           MIRAI_BUILD_INDEX_AUTH_USERNAME: ${{ secrets.MIRAI_BUILD_INDEX_AUTH_USERNAME }}
           MIRAI_BUILD_INDEX_AUTH_PASSWORD: ${{ secrets.MIRAI_BUILD_INDEX_AUTH_PASSWORD }}
 
+      - run: >
+          ./gradlew updateSnapshotVersionForGitHub ${{ env.gradleArgs }}
+        if: github.event.pusher && vars.RUN_GITHUB_SNAPSHOTS == 'true'
+        env:
+          MIRAI_IS_SNAPSHOTS_PUBLISHING: true
+          CURRENT_BRANCH_NAME: dev
+          SNAPSHOTS_PUBLISHING_USER: ${{ github.actor }}
+          SNAPSHOTS_PUBLISHING_KEY: ${{ secrets.GITHUB_TOKEN }}
+          SNAPSHOTS_PUBLISHING_URL: ${{ secrets.SNAPSHOTS_PUBLISHING_URL }}
+
       - name: "Assemble"
         run: ./gradlew assemble ${{ env.gradleArgs }}
 
@@ -93,6 +103,15 @@ jobs:
           MIRAI_IS_SNAPSHOTS_PUBLISHING: true
           SNAPSHOTS_PUBLISHING_USER: ${{ secrets.SNAPSHOTS_PUBLISHING_USER }}
           SNAPSHOTS_PUBLISHING_KEY: ${{ secrets.SNAPSHOTS_PUBLISHING_KEY }}
+          SNAPSHOTS_PUBLISHING_URL: ${{ secrets.SNAPSHOTS_PUBLISHING_URL }}
+
+      - name: Publish Snapshots To GitHub
+        if: ${{ github.event.pusher && env.isMac == 'true' && vars.RUN_GITHUB_SNAPSHOTS == 'true' }}
+        run: ./gradlew publishAllPublicationsToMiraiRepoRepository ${{ env.gradleArgs }}
+        env:
+          MIRAI_IS_SNAPSHOTS_PUBLISHING: true
+          SNAPSHOTS_PUBLISHING_USER: ${{ github.actor }}
+          SNAPSHOTS_PUBLISHING_KEY: ${{ secrets.GITHUB_TOKEN }}
           SNAPSHOTS_PUBLISHING_URL: ${{ secrets.SNAPSHOTS_PUBLISHING_URL }}
 
       # Upload
