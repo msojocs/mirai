@@ -72,6 +72,7 @@ jobs:
         if: github.event.pusher && vars.RUN_GITHUB_SNAPSHOTS == 'true'
         env:
           MIRAI_IS_SNAPSHOTS_PUBLISHING: true
+          CURRENT_BRANCH_NAME: dev
           SNAPSHOTS_PUBLISHING_USER: ${{ github.actor }}
           SNAPSHOTS_PUBLISHING_KEY: ${{ secrets.GITHUB_TOKEN }}
           SNAPSHOTS_PUBLISHING_URL: ${{ secrets.SNAPSHOTS_PUBLISHING_URL }}
