@@ -206,6 +206,13 @@ public interface IMirai : LowLevelApiAccessor {
     public suspend fun queryProfile(bot: Bot, targetId: Long): UserProfile
 
     /**
+     * 点赞某个用户
+     *
+     * @since 2.14.0
+     */
+    public suspend fun sendLike(bot: Bot, targetId: Long, count: Int): LikeResult
+
+    /**
      * 构造一个 [OfflineMessageSource].
      *
      * 更推荐使用 [MessageSourceBuilder] 和 [MessageSource.copyAmend] 创建 [OfflineMessageSource].

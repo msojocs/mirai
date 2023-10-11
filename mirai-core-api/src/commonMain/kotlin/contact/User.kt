@@ -23,6 +23,7 @@ import net.mamoe.mirai.event.events.UserMessagePreSendEvent
 import net.mamoe.mirai.message.MessageReceipt
 import net.mamoe.mirai.message.action.Nudge
 import net.mamoe.mirai.message.action.UserNudge
+import net.mamoe.mirai.message.data.LikeResult
 import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.isContentEmpty
 import net.mamoe.mirai.message.data.toPlainText
@@ -85,6 +86,13 @@ public interface User : Contact, UserOrBot, CoroutineScope {
      * @see Nudge.sendTo 发送这个戳一戳消息
      */
     public override fun nudge(): UserNudge
+
+    /**
+     * 对用户进行点赞
+     *
+     * @since 2.14.0
+     */
+    public suspend fun sendLike(count: Int): LikeResult = Mirai.sendLike(bot, this.id, count)
 
     /**
      * 查询用户信息.

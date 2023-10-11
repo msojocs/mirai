@@ -30,6 +30,7 @@ internal class MessageProtocolFacadeTest : AbstractTest() {
                 MarketFaceProtocol
                 SuperFaceProtocol
                 MusicShareProtocol
+                ArkMessageProtocol
                 PokeMessageProtocol
                 PttMessageProtocol
                 RichMessageProtocol

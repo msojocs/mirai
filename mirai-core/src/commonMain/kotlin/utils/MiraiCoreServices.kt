@@ -71,6 +71,10 @@ internal object MiraiCoreServices {
         ) { net.mamoe.mirai.internal.message.protocol.impl.MusicShareProtocol() }
         Services.register(
             msgProtocol,
+            "net.mamoe.mirai.internal.message.protocol.impl.ArkMessageProtocol"
+        ) { net.mamoe.mirai.internal.message.protocol.impl.ArkMessageProtocol() }
+        Services.register(
+            msgProtocol,
             "net.mamoe.mirai.internal.message.protocol.impl.PokeMessageProtocol"
         ) { net.mamoe.mirai.internal.message.protocol.impl.PokeMessageProtocol() }
         Services.register(
