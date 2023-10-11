@@ -126,6 +126,20 @@ tasks.register("updateSnapshotVersion") {
     }
 }
 
+tasks.register("updateSnapshotVersionForGitHub") {
+    group = "mirai"
+
+    dependsOn(tasks.compileKotlin)
+    dependsOn(tasks.compileJava)
+
+    doLast {
+        val branch = System.getenv("CURRENT_BRANCH_NAME")
+        logger.info("Current branch name is '$branch'")
+        val sha = getSha().trim().take(8)
+        setProjectVersionForFutureBuilds("${Versions.project}-$branch-${sha}")
+    }
+}
+
 tasks.register("publishSnapshotPage") {
     doLast {
         val sha = getSha()
